@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
   const mailtrapUser = env.MAILTRAP_USER
   const mailtrapPass = env.MAILTRAP_PASS
   const mailFrom = env.MAIL_FROM || 'no-reply@moonlight.local'
+  const contactRecipient = env.CONTACT_TO || 'talha196javed@gmail.com'
 
   return {
     plugins: [
@@ -97,6 +98,66 @@ export default defineConfig(({ mode }) => {
                   to: toEmail,
                   subject,
                   text,
+                })
+
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify({ ok: true }))
+              } catch (e: any) {
+                res.statusCode = 500
+                res.setHeader('Content-Type', 'text/plain')
+                res.end(e?.message ? String(e.message) : 'Failed to send email')
+              }
+            })
+          })
+        },
+      },
+      {
+        name: 'contact-form-mailtrap',
+        configureServer(server) {
+          server.middlewares.use('/api/contact', (req: any, res: any, next: any) => {
+            if (req.method !== 'POST') return next()
+
+            let body = ''
+            req.on('data', (chunk: any) => {
+              body += chunk
+            })
+            req.on('end', async () => {
+              try {
+                if (!mailtrapUser || !mailtrapPass) {
+                  res.statusCode = 500
+                  res.setHeader('Content-Type', 'text/plain')
+                  res.end('Missing MAILTRAP_USER / MAILTRAP_PASS env vars')
+                  return
+                }
+
+                const parsed = body ? JSON.parse(body) : {}
+                const name = String(parsed.name || '').trim()
+                const email = String(parsed.email || '').trim()
+                const message = String(parsed.message || '').trim()
+
+                if (!name || !email || !message) {
+                  res.statusCode = 400
+                  res.setHeader('Content-Type', 'text/plain')
+                  res.end('Missing required fields')
+                  return
+                }
+
+                const transporter = nodemailer.createTransport({
+                  host: mailtrapHost,
+                  port: mailtrapPort,
+                  auth: {
+                    user: mailtrapUser,
+                    pass: mailtrapPass,
+                  },
+                })
+
+                await transporter.sendMail({
+                  from: mailFrom,
+                  to: contactRecipient,
+                  replyTo: email,
+                  subject: `New contact message from ${name}`,
+                  text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
                 })
 
                 res.statusCode = 200

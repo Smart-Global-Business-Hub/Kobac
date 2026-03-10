@@ -58,6 +58,12 @@ const impactStats = [
 
 export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactStatus, setContactStatus] = useState<
+    { type: "idle" } | { type: "sending" } | { type: "success"; message: string } | { type: "error"; message: string }
+  >({ type: "idle" });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -70,6 +76,50 @@ export default function LandingPage() {
     const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
+  const submitContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (contactStatus.type === "sending") return;
+
+    const name = contactName.trim();
+    const email = contactEmail.trim();
+    const message = contactMessage.trim();
+
+    if (!name || !email || !message) {
+      setContactStatus({ type: "error", message: "Please fill in name, email, and message." });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setContactStatus({ type: "error", message: "Please enter a valid email address." });
+      return;
+    }
+
+    setContactStatus({ type: "sending" });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(text || `Request failed (${res.status})`);
+      }
+
+      setContactName("");
+      setContactEmail("");
+      setContactMessage("");
+      setContactStatus({ type: "success", message: "Message sent successfully." });
+    } catch (err: any) {
+      setContactStatus({ type: "error", message: err?.message ? String(err.message) : "Failed to send message." });
+    }
   };
 
   return (
@@ -595,38 +645,59 @@ export default function LandingPage() {
             </div>
 
             <div style={{marginTop:"20%"}}>
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={submitContact}>
                 <input
-                    type="text"
-                    className="w-full bg-transparent border-0 border-b border-white/60 px-0 py-3 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-0"
-                    placeholder="First name"
+                  type="text"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  className="w-full bg-transparent border-0 border-b border-white/60 px-0 py-3 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-0"
+                  placeholder="Name"
+                  autoComplete="name"
                 />
 
-                <div className="relative">
-                  <input
-                      type="email"
-                      className="w-full bg-transparent border-0 border-b border-white/60 px-0 py-3 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-0"
-                      placeholder="Email"
-                  />
+                <input
+                  type="email"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  className="w-full bg-transparent border-0 border-b border-white/60 px-0 py-3 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-0"
+                  placeholder="Email"
+                  autoComplete="email"
+                />
 
+                <textarea
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  className="w-full bg-transparent border-0 border-b border-white/60 px-0 py-3 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-0 min-h-[120px] resize-none"
+                  placeholder="Message"
+                />
+
+                <div className="flex items-center justify-between gap-4">
                   <button
-                      type="submit"
-                      className="absolute right-0 top-1/2 -translate-y-1/2 text-white"
+                    type="submit"
+                    disabled={contactStatus.type === "sending"}
+                    className="text-white flex items-center gap-2 hover:underline disabled:opacity-60 disabled:cursor-not-allowed"
                   >
+                    {contactStatus.type === "sending" ? "Sending..." : "Send"}
                     <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
                       <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
                       />
                     </svg>
                   </button>
+
+                  {contactStatus.type === "success" ? (
+                    <span className="text-white/90 text-sm">{contactStatus.message}</span>
+                  ) : contactStatus.type === "error" ? (
+                    <span className="text-white/90 text-sm">{contactStatus.message}</span>
+                  ) : null}
                 </div>
               </form>
 
