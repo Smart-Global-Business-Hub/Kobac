@@ -1,52 +1,65 @@
 import { useState, useEffect } from "react";
-import image1 from "../../assets/image1.jpg";
+import { Link } from "react-router-dom";
+import image1 from "../../assets/image1.png";
 import image2 from "../../assets/image2.png";
 import image3 from "../../assets/image3.jpg";
-import image4 from "../../assets/image4.jpg";
-import image5 from "../../assets/image5.jpg";
-import image6 from "../../assets/image6.jpg";
-import image7 from "../../assets/image7.jpg";
-import image8 from "../../assets/image8.jpg";
-import image9 from "../../assets/image9.jpg";
-import image10 from "../../assets/image10.jpg";
+import image4 from "../../assets/wwd1.png";
+import image5 from "../../assets/wwd2.png";
+import image6 from "../../assets/wwd3.png";
+import image7 from "../../assets/wwd4.png";
+import image8 from "../../assets/wwd5.png";
+import image9 from "../../assets/soi1.png";
+import image10 from "../../assets/soi2.png";
+import image11 from "../../assets/soi3.png";
 
 const heroSlides = [
   {
     image: image1,
     title: "Empowerment Through Development",
-    subtitle: "Transforming Lives through Sustainable Development, Quality Education, Vocational Training & Thriving Community Centers.",
+    subtitle: "Transforming Lives through Climate Change, Well Management, Park and Recreation IT Training & Thriving Community Centers.",
   },
   {
     image: image2,
-    title: "where everyone can thrive, today and tomorrow.",
-    subtitle: "We partner with communities to unlock human potential, build resilient futures, and create inclusive spaces",
+    title: "Empowerment Through Development",
+    subtitle: "Transforming Lives through Climate Change, Well Management, Park and Recreation IT Training & Thriving Community Centers.",
   },
 ];
 
 const whatWeDoItems = [
   {
+    id: "climate-change",
     image: image4,
-    tags: ["15,000 students supported annually", "Climate-adaptive"],
-    title: "Sustainable Development",
-    description: "We implement community-led initiatives that promote environmental sustainability, economic resilience, and long-term wellbeing.",
+    tags: ["Tree Plantation Drives", "Reforestation Projects"],
+    title: "Climate Change (tree planting)",
+    description: "We work with local communities, schools, and volunteers to plant native trees, protect green spaces, and promote sustainable living practices. Each tree planted contributes to cleaner air, reduced carbon footprint, and healthier ecosystems for future generations. Through collective action, we aim to build greener and more resilient communities.",
   },
   {
+    id: "well-management",
     image: image5,
-    tags: ["Formal and Non-Formal Education", "School Rehabilitation"],
-    title: "Education for All",
-    description: "Education is the backbone of societal empowerment and innovation. We work to improve educational access, quality, and equity across communities.",
+    tags: ["Sustainable Water", "Water Quality Monitoring"],
+    title: "Well Management",
+    description: "Access to clean water is fundamental to health and dignity. Our Well Management program ensures the construction, restoration, and maintenance of wells in underserved regions. We focus on water quality monitoring, hygiene education, and long-term sustainability by training local caretakers.",
   },
   {
+    id: "community-centers",
     image: image6,
-    tags: ["Business skills", "entrepreneurship workshops"],
-    title: "Vocational Training & Skills Development",
-    description: "Our vocational programs transform lives by equipping youth and adults with practical skills that lead to meaningful employment and entrepreneurship.",
-  },
-  {
-    image: image7,
     tags: ["Supportive Housing Initiatives", "Multipurpose centers"],
     title: "Community Centers & Supportive Housing",
-    description: "Community centers are the heart of our programs—safe places where people gather to learn, grow, innovate, and belong.",
+    description: "Community Centers serve as safe, inclusive hubs where individuals come together to learn, grow, and connect. These centers host educational programs, skill-building workshops, health camps, social activities for youth, women, and families. By creating accessible community spaces, we strengthen social bonds, encourage collaboration, and support holistic community development.",
+  },
+  {
+    id: "it-training",
+    image: image7,
+    tags: ["Digital literacy", "employability"],
+    title: "IT Training & Skills Development",
+    description: "Digital literacy is a gateway to opportunity in today's world. Our IT Training program equips individuals with essential computer knowledge, technical skills, and career-oriented certifications. Through structured learning modules, mentorship, and industry partnerships, participants gain confidence and employable skills that open doors to better livelihoods and long-term career growth.",
+  },
+  {
+    id: "parks-recreation",
+    image: image8,
+    tags: ["Playground Installations", "Green spaces"],
+    title: "Parks & Recreation",
+    description: "Our Parks & Recreation initiative is dedicated to developing public spaces that encourage physical activity, relaxation, and community interaction. We design and maintain parks, playgrounds, and sports areas that provide safe environments for families and children. These green spaces not only enhance urban beauty but also improve mental wellbeing, environmental health, and social harmony.",
   },
 ];
 
@@ -360,7 +373,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {whatWeDoItems.map((item, index) => (
               <div key={index} className="bg-[white] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
                 <div className="h-64 overflow-hidden">
@@ -385,12 +398,12 @@ export default function LandingPage() {
                     {item.title}
                   </h3>
                   <p className="text-[#4A5565] mb-4" style={{ fontFamily: "Manrope, sans-serif", fontWeight: "400px", fontSize: "16px" }}>{item.description}</p>
-                  <button className="text-[#33BBFF] font-medium flex items-center gap-2 hover:underline">
+                  <Link to={`/program/${item.id}`} className="text-[#33BBFF] font-medium flex items-center gap-2 hover:underline">
                     Learn More
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -424,12 +437,12 @@ export default function LandingPage() {
               { number: "100+", label: "Community Centers", sublabel: "Built or supported" },
               { number: "500+", label: "Families Housed", sublabel: "provided with safe housing support" },
             ].map((stat, index) => (
-              <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2" style={{ fontFamily: "Poppins, sans-serif" }}>
+              <div key={index} className="bg-white rounded-2xl p-6 text-center">
+                <div className="text-4xl lg:text-5xl font-bold text-gray-900 mb-2" style={{ fontFamily: "Poppins, sans-serif" }}>
                   {stat.number}
                 </div>
-                <div className="text-white font-medium mb-1">{stat.label}</div>
-                <div className="text-white/70 text-sm">{stat.sublabel}</div>
+                <div className="text-gray-900 font-medium mb-1">{stat.label}</div>
+                <div className="text-gray-600 text-sm">{stat.sublabel}</div>
               </div>
             ))}
           </div>
@@ -463,9 +476,9 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { image: image8, location: "Uganda", title: "Building Brighter Futures Through Education" },
-              { image: image9, location: "Ghana", tags: ["Climate-adaptive"], title: "Creating Opportunities for Young Leaders" },
-              { image: image10, location: "Somalia", tags: ["Climate-adaptive"], title: "Bringing Healthcare to Remote Villages" },
+              { image: image9, location: "Uganda", title: "Building Brighter Futures Through Education" },
+              { image: image10, location: "Ghana", tags: ["Climate-adaptive"], title: "Creating Opportunities for Young Leaders" },
+              { image: image11, location: "Somalia", tags: ["Climate-adaptive"], title: "Bringing Healthcare to Remote Villages" },
             ].map((story, index) => (
               <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
                 <div className="h-64 overflow-hidden">
