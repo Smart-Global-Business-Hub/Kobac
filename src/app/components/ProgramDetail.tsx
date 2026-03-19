@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "./Header";
 
 // Import images
+import wedo1 from "../../assets/wedo1.png";
+import wedo2 from "../../assets/wedo2.png";
+import wedo3 from "../../assets/wedo3.png";
 import image4 from "../../assets/bcr.png";
 import image5 from "../../assets/bcr2.png";
 import image6 from "../../assets/bcr3.png";
@@ -21,13 +24,15 @@ import v2 from "../../assets/v2.mp4";
 import v3 from "../../assets/v3.mp4";
 import v4 from "../../assets/v4.mp4";
 import v5 from "../../assets/v5.mp4";
+import lineart from "../../assets/lineart.png";
+
 
 // Program data with detailed content matching the images
 const programData = {
   "climate-change": {
     id: "climate-change",
     title: "Climate Change & Tree Planting",
-    heroImage: image4,
+    heroImage: wedo1,
     tags: ["Tree Plantation Drives", "Reforestation Projects"],
     mainHeading: "Building Climate Resilience Through Green Action",
     mainDescription: "Somalia faces increasing environmental challenges including desertification, prolonged droughts, soil erosion, and rising temperatures. Our Climate Change and Tree Planting initiative is designed to restore ecological balance while strengthening community resilience. We collaborate with local leaders, youth groups, and environmental volunteers to plant native and drought-resistant trees that can survive harsh climatic conditions and improve biodiversity.",
@@ -60,7 +65,7 @@ const programData = {
   "well-management": {
     id: "well-management",
     title: "Well Management",
-    heroImage: image5,
+    heroImage: wedo2,
     tags: ["Sustainable Water", "Water Quality Monitoring"],
     mainHeading: "Ensuring Access to Clean Water for All",
     mainDescription: "Access to clean water is fundamental to health and dignity. Our Well Management program ensures the construction, restoration, and maintenance of wells in underserved regions. We focus on water quality monitoring, hygiene education, and long-term sustainability by training local caretakers.",
@@ -81,7 +86,7 @@ const programData = {
   "community-centers": {
     id: "community-centers",
     title: "Community Centers & Supportive Housing",
-    heroImage: image6,
+    heroImage: wedo3,
     tags: ["Supportive Housing Initiatives", "Multipurpose centers"],
     mainHeading: "Creating Safe Spaces for Community Growth",
     mainDescription: "Community Centers serve as safe, inclusive hubs where individuals come together to learn, grow, and connect. These centers host educational programs, skill-building workshops, health camps, and social activities for youth, women, and families.",
@@ -148,6 +153,11 @@ export default function ProgramDetail() {
   const navigate = useNavigate();
   const program = programData[programId as keyof typeof programData];
 
+  // Scroll to top when component loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (!program) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -181,7 +191,7 @@ export default function ProgramDetail() {
         <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="max-w-3xl text-white">
             <h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4"
+              className="text-4xl sm:text-5xl lg:text-6xl mb-4"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {program.title}
@@ -195,7 +205,7 @@ export default function ProgramDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <h2
-                className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6 text-left"
+                className="text-3xl lg:text-5xl text-gray-900 mb-6 text-left"
                 style={{ fontFamily: "Poppins, sans-serif" }}
             >
               {program.mainHeading}
@@ -224,7 +234,7 @@ export default function ProgramDetail() {
           {/* Overview Section */}
           <div className="bg-blue-50 rounded-2xl p-8 lg:p-12 mb-16">
             <h3
-              className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6"
+              className="text-3xl lg:text-5xl text-gray-900 mb-6"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
               Overview
@@ -240,7 +250,7 @@ export default function ProgramDetail() {
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {program.detailedSections.slice(0, 3).map((section: any, index: number) => (
                 <div key={index}>
-                  <h4 className="text-xl font-bold text-gray-900 mb-3" style={{ fontFamily: "Poppins, sans-serif" }}>{section.title}</h4>
+                  <h4 className="text-xl lg:text-2xl text-black mb-3" style={{ fontFamily: "Poppins, sans-serif" }}>{section.title}</h4>
                   <p className="text-gray-700" style={{ fontFamily: "Inter, sans-serif" }}>
                     {section.description}
                   </p>
@@ -252,7 +262,7 @@ export default function ProgramDetail() {
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {program.detailedSections.slice(3, 5).map((section: any, index: number) => (
                 <div key={index}>
-                  <h4 className="text-xl font-bold text-gray-900 mb-3" style={{ fontFamily: "Poppins, sans-serif" }}>{section.title}</h4>
+                  <h4 className="text-xl lg:text-2xl text-black mb-3" style={{ fontFamily: "Poppins, sans-serif" }}>{section.title}</h4>
                   <p className="text-gray-700" style={{ fontFamily: "Inter, sans-serif" }}>
                     {section.description}
                   </p>
@@ -261,11 +271,12 @@ export default function ProgramDetail() {
             </div>
           </div>
 
+
           {/* Images Section */}
-          <div className="mb-16">
+          <div className="mb-16 ml-13 mr-13 mt-16">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {program.galleryImages.map((image: any, index: number) => (
-                <div key={index} className="rounded-2xl overflow-hidden shadow-lg">
+                <div key={index} className="overflow-hidden shadow-lg">
                   <img
                     src={image}
                     alt={`${program.title} - Image ${index + 1}`}
@@ -277,15 +288,21 @@ export default function ProgramDetail() {
           </div>
 
           {/* Call to Action */}
-          <div className="bg-[#3DB1F5] rounded-2xl p-8 lg:p-12 text-left mt-20">
+          <div className="bg-[#3DB1F5] rounded-2xl p-8 lg:p-12 text-left mt-20"
+               style={{
+                 backgroundImage: `url(${lineart})`,
+                 backgroundRepeat: "no-repeat",
+                 backgroundPosition: "right",
+                 backgroundSize: "contain",
+               }}>
             <h3
-              className="text-2xl lg:text-3xl font-bold text-white mb-4"
+              className="text-3xl lg:text-5xl text-white mb-4 mt-13"
               style={{ fontFamily: "Poppins, sans-serif" }}
             >
-              Join the Movement for a Better Somalia
+              Join the Movement for a Better <br /> Somalia
             </h3>
-            <p className="text-blue-100 text-lg mb-8 text-left">
-              our donation directly supports life-changing programs across Somalia — including clean water projects, tree planting initiatives, community centers, public parks, and IT training for youth..
+            <p className="text-blue-100 text-lg mb-8 text-left mt-9">
+              Your donation directly supports life-changing programs across Somalia — including clean water projects, tree planting initiatives, community centers, public parks, and IT training for youth..
             </p>
             <div className="flex flex-wrap gap-4 justify-left">
               <button className="bg-[#0071BC] text-white px-8 py-3 rounded-full font-medium transition-colors">

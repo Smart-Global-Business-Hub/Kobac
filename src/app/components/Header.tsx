@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import sitelogo from "../../assets/sitelogo.png";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
@@ -55,11 +56,17 @@ export default function Header() {
                         {/* Logo */}
                         <div
                             className="flex items-center gap-2 cursor-pointer"
-                            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                            onClick={() => {
+                                if (location.pathname === '/') {
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                } else {
+                                    navigate('/');
+                                }
+                            }}
                         >
                             <div className="relative">
                                 <img
-                                    src={'/src/assets/logok.png'}
+                                    src={sitelogo}
                                     style={{ width: "128px", height: "50px" }}
                                     alt="Logo"
                                     className="object-contain"
@@ -134,7 +141,6 @@ export default function Header() {
                 </div>
             )}
 
-            <div className="h-16 lg:h-20"></div>
         </>
     );
 }
